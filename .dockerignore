@@ -1,0 +1,9 @@
+node_modules
+build/
+.idea/
+.travis.yml
+dcmtk-cxx/release
+dcmtk-cxx/build
+dcmtk-cxx/dcmtk
+dist
+server/resoures/

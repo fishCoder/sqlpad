@@ -8,6 +8,7 @@ const Query = require('../models/Query.js');
 const mustBeAuthenticated = require('../middleware/must-be-authenticated.js');
 const mustBeAuthenticatedOrChartLink = require('../middleware/must-be-authenticated-or-chart-link-noauth.js');
 const sendError = require('../lib/sendError');
+const Base64 = require('js-base64').Base64;
 
 // This allows executing a query relying on the saved query text
 // Instead of relying on an open endpoint that executes arbitrary sql
@@ -45,9 +46,12 @@ router.post('/api/query-result', mustBeAuthenticated, function(req, res) {
     connectionId: req.body.connectionId,
     queryName: req.body.queryName,
     queryText: req.body.queryText,
+    encodeType: req.body.encodeType,
     user: req.user
   };
 
+  data.queryText = Base64.decode(data.queryText);
+  console.log('sql -> ' + data.queryText);
   return getQueryResult(data)
     .then(queryResult => res.send({ queryResult }))
     .catch(error => sendError(res, error));

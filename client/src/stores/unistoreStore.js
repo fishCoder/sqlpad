@@ -5,6 +5,7 @@ import message from 'antd/lib/message';
 import sqlFormatter from 'sql-formatter';
 import fetchJson from '../utilities/fetch-json.js';
 import updateCompletions from '../utilities/updateCompletions.js';
+import { Base64 } from 'js-base64';
 
 const ONE_HOUR_MS = 1000 * 60 * 60;
 
@@ -277,11 +278,13 @@ export const actions = store => ({
       isRunning: true,
       runQueryStartTime: new Date()
     });
+    let queryText = selectedText || query.queryText;
     const postData = {
       connectionId: selectedConnectionId,
       cacheKey,
       queryName: query.name,
-      queryText: selectedText || query.queryText
+      queryText: Base64.encode(queryText),
+      decodeType: 'base64'
     };
     const { queryResult, error } = await fetchJson(
       'POST',
